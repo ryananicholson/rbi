@@ -1,0 +1,43 @@
+resource "azurerm_frontdoor" "sec488-frontdoor" {
+  name                                         = "sec488-frontdoor"
+  resource_group_name                          = azurerm_resource_group.sec488-rg.name
+  enforce_backend_pools_certificate_name_check = false
+
+  routing_rule {
+    name               = "sec488-rr"
+    accepted_protocols = ["Https"]
+    patterns_to_match  = ["/*"]
+    frontend_endpoints = ["sec488-rnicholson-azurefd-net"]
+    forwarding_configuration {
+      forwarding_protocol = "MatchRequest"
+      backend_pool_name   = "sec488-backend"
+    }
+  }
+
+  backend_pool_load_balancing {
+    name = "sec488-backend-lb"
+  }
+
+  backend_pool_health_probe {
+    name = "sec488-health"
+  }
+
+  backend_pool {
+    name = "sec488-backend"
+    backend {
+      host_header = azurerm_public_ip.sec488-hrweb-pip.ip_address
+      address     = azurerm_public_ip.sec488-hrweb-pip.ip_address
+      http_port   = 80
+      https_port  = 443
+    }
+
+    load_balancing_name = "sec488-backend-lb"
+    health_probe_name   = "sec488-health"
+  }
+
+  frontend_endpoint {
+    name                              = "sec488-rnicholson-azurefd-net"
+    host_name                         = "sec488-rnicholson.azurefd.net"
+  }
+  depends_on = [azurerm_public_ip.sec488-hrweb-pip,azurerm_linux_virtual_machine.sec488-hrweb]
+}

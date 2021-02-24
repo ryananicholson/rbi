@@ -1,0 +1,118 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {}
+    "resources": [
+        {
+            "type": "Microsoft.Network/frontdoors",
+            "apiVersion": "2020-05-01",
+            "name": "sec488-RANDOM",
+            "location": LOCATION,
+            "tags": {},
+            "properties": {
+                "frontdoorId": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM",
+                "friendlyName": "sec488-RANDOM",
+                "enabledState": "Enabled",
+                "healthProbeSettings": [
+                    {
+                        "name": "healthProbeSettings-1613832938092",
+                        "properties": {
+                            "path": "/",
+                            "protocol": "Https",
+                            "intervalInSeconds": 30,
+                            "healthProbeMethod": "Head",
+                            "enabledState": "Enabled"
+                        },
+                        "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/healthProbeSettings/healthProbeSettings-1613832938092"
+                    }
+                ],
+                "loadBalancingSettings": [
+                    {
+                        "name": "loadBalancingSettings-1613832938092",
+                        "properties": {
+                            "sampleSize": 1,
+                            "successfulSamplesRequired": 1,
+                            "additionalLatencyMilliseconds": 0
+                        },
+                        "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/loadBalancingSettings/loadBalancingSettings-1613832938092"
+                    }
+                ],
+                "frontendEndpoints": [
+                    {
+                        "name": "sec488-RANDOM-azurefd-net",
+                        "properties": {
+                            "hostName": "sec488-RANDOM.azurefd.net",
+                            "sessionAffinityEnabledState": "Disabled",
+                            "sessionAffinityTtlSeconds": 0,
+                            "webApplicationFirewallPolicyLink": null,
+                            "customHttpsConfiguration": null
+                        },
+                        "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/frontendEndpoints/sec488-RANDOM-azurefd-net"
+                    }
+                ],
+                "backendPools": [
+                    {
+                        "name": "sec488-backend",
+                        "properties": {
+                            "backends": [
+                                {
+                                    "address": ADDRESS,
+                                    "privateLinkResourceId": null,
+                                    "privateLinkLocation": null,
+                                    "privateEndpointStatus": null,
+                                    "privateLinkApprovalMessage": null,
+                                    "enabledState": "Enabled",
+                                    "httpPort": 80,
+                                    "httpsPort": 443,
+                                    "priority": 1,
+                                    "weight": 50,
+                                    "backendHostHeader": ADDRESS
+                                }
+                            ],
+                            "loadBalancingSettings": {
+                                "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/loadBalancingSettings/loadBalancingSettings-1613832938092"
+                            },
+                            "healthProbeSettings": {
+                                "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/healthProbeSettings/healthProbeSettings-1613832938092"
+                            }
+                        },
+                        "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/backendPools/sec488-backend"
+                    }
+                ],
+                "routingRules": [
+                    {
+                        "name": "sec488-rr",
+                        "properties": {
+                            "frontendEndpoints": [
+                                {
+                                    "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/frontendEndpoints/sec488-RANDOM-azurefd-net"
+                                }
+                            ],
+                            "acceptedProtocols": [
+                                "Https"
+                            ],
+                            "patternsToMatch": [
+                                "/*"
+                            ],
+                            "enabledState": "Enabled",
+                            "routeConfiguration": {
+                                "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration",
+                                "customForwardingPath": null,
+                                "forwardingProtocol": "HttpsOnly",
+                                "backendPool": {
+                                    "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/backendPools/sec488-backend"
+                                },
+                                "cacheConfiguration": null
+                            }
+                        },
+                        "id": "/subscriptions/SUBSCRIPTION/resourceGroups/SEC488-RG/providers/Microsoft.Network/frontdoors/sec488-RANDOM/routingRules/sec488-rr"
+                    }
+                ],
+                "backendPoolsSettings": {
+                    "enforceCertificateNameCheck": "Enabled",
+                    "sendRecvTimeoutSeconds": 30
+                }
+            }
+        }
+    ]
+}
