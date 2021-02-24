@@ -2,6 +2,10 @@ resource "random_password" "sec488-hrweb-password" {
   length           = 16
   special          = true
   override_special = "_%@"
+  min_lower        = 2
+  min_upper        = 2
+  min_special      = 2
+  min_numeric      = 2
 }
 
 resource "azurerm_linux_virtual_machine" "sec488-hrweb" {
